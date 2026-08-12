@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Laptop Price Estimator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="eyebrow">SPEC&#8209;BASED PRICE ENGINE</div>
+    <h1>Laptop Price Estimator</h1>
+    <p class="subtitle">Configure a machine below. The model reads your spec sheet and prices it like an appraiser, instantly.</p>
+  </header>
+
+  <main class="layout">
+
+    <!-- ===================== FORM ===================== -->
+    <section class="panel form-panel" aria-labelledby="form-heading">
+      <h2 id="form-heading" class="panel-title">Build configuration</h2>
+
+      <form id="predict-form" novalidate>
+
+        <fieldset class="field-group">
+          <legend>Brand &amp; type</legend>
+
+          <div class="field">
+            <label for="company">Manufacturer</label>
+            <select id="company" name="company" required>
+              <option value="" disabled selected>Select manufacturer&hellip;</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="typeName">Laptop type</label>
+            <select id="typeName" name="type_name" required>
+              <option value="" disabled selected>Select type&hellip;</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>Performance</legend>
+
+          <div class="field">
+            <label for="cpu">Processor</label>
+            <select id="cpu" name="cpu" required>
+              <option value="" disabled selected>Select processor&hellip;</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="gpu">Graphics (GPU)</label>
+            <select id="gpu" name="gpu" required>
+              <option value="" disabled selected>Select GPU brand&hellip;</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="ram">RAM (GB)</label>
+            <select id="ram" name="ram" required>
+              <option value="" disabled selected>Select RAM&hellip;</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>Storage</legend>
+
+          <div class="field">
+            <label for="ssd">SSD (GB)</label>
+            <select id="ssd" name="ssd" required></select>
+          </div>
+
+          <div class="field">
+            <label for="hdd">HDD (GB)</label>
+            <select id="hdd" name="hdd" required></select>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>Display</legend>
+
+          <div class="field">
+            <label for="screenSize">Screen size (inches)</label>
+            <input type="number" id="screenSize" name="screen_size" min="10" max="20" step="0.1" placeholder="e.g. 15.6" required />
+          </div>
+
+          <div class="field">
+            <label for="resolution">Resolution</label>
+            <select id="resolution" name="resolution" required></select>
+          </div>
+
+          <div class="field toggle-row">
+            <span class="toggle-label">Touchscreen</span>
+            <button type="button" class="toggle" id="touchscreen" data-value="0" role="switch" aria-checked="false">
+              <span class="toggle-pill"></span>
+            </button>
+          </div>
+
+          <div class="field toggle-row">
+            <span class="toggle-label">IPS panel</span>
+            <button type="button" class="toggle" id="ips" data-value="0" role="switch" aria-checked="false">
+              <span class="toggle-pill"></span>
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>Build</legend>
+
+          <div class="field">
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" name="weight" min="0.5" max="6" step="0.01" placeholder="e.g. 2.10" required />
+          </div>
+
+          <div class="field">
+            <label for="os">Operating system</label>
+            <select id="os" name="os" required>
+              <option value="" disabled selected>Select OS&hellip;</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="btn-label">Estimate price</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- ===================== RESULT ===================== -->
+    <aside class="panel result-panel">
+      <h2 class="panel-title">Appraisal</h2>
+
+      <div class="laptop-stage">
+        <svg class="laptop-svg" viewBox="0 0 220 150" aria-hidden="true">
+          <rect x="30" y="10" width="160" height="104" rx="6" class="laptop-screen-frame" />
+          <rect x="38" y="18" width="144" height="88" rx="2" class="laptop-screen" />
+          <path d="M10 128 L210 128 L196 146 L24 146 Z" class="laptop-base" />
+          <rect x="90" y="132" width="40" height="4" rx="2" class="laptop-notch" />
+          <line x1="38" y1="18" x2="182" y2="106" class="scan-line" id="scan-line" />
+        </svg>
+        <div class="screen-content" id="screen-content">
+          <span class="screen-idle">Awaiting configuration</span>
+        </div>
+      </div>
+
+      <div class="ticket" id="ticket">
+        <div class="ticket-header">
+          <span>SPEC TICKET</span>
+          <span id="ticket-date"></span>
+        </div>
+        <ul class="ticket-lines" id="ticket-lines"></ul>
+        <div class="ticket-total" id="ticket-total" hidden>
+          <span>Estimated price</span>
+          <span class="ticket-total-amount" id="ticket-total-amount">&mdash;</span>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="site-footer">
+    <span id="api-status-note">Connecting to prediction API&hellip;</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
