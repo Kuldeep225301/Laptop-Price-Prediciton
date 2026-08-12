@@ -17,6 +17,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # production mein specific frontend domain daalna better hai
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 try:
     pipe = joblib.load(MODEL_PATH)
     df = joblib.load(DATA_PATH)

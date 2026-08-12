@@ -1,5 +1,6 @@
 (() => {
-  const API_BASE = 'http://127.0.0.1:8000';
+
+  const API_BASE = 'https://laptop-price-prediciton-2.onrender.com';
 
   // ---- Fallback option lists (used if /metadata is unreachable) ----
   const FALLBACK = {
